@@ -5,15 +5,6 @@
 #   binary: binary_name
 #   icon: path/to/icon.svg
 
-- name: PCSX2
-  repo: https://github.com/PCSX2/pcsx2
-  binary: pcsx2
-  icon: icons/pcsx2.svg
-  comment: Playstation 2 Emulator
-  categories: Game;Emulator;
-  startup_wm_class: PCSX2
-  mime_type:
-
 - name: ImHex
   repo: https://github.com/WerWolv/ImHex
   binary: imhex
@@ -21,6 +12,24 @@
   comment: Hex Editor
   categories: Development;Utility;
   startup_wm_class: imhex
+  mime_type:
+
+- name: LMMS
+  repo: https://github.com/LMMS
+  binary: lmms
+  icon: icons/lmms.svg
+  comment: Linux MultiMedia Studio
+  categories: AudioVideo;Audio;
+  startup_wm_class: lmms
+  mime_type: audio/x-lmms-project;
+
+- name: PCSX2
+  repo: https://github.com/PCSX2/pcsx2
+  binary: pcsx2
+  icon: icons/pcsx2.svg
+  comment: Playstation 2 Emulator
+  categories: Game;Emulator;
+  startup_wm_class: PCSX2
   mime_type:
 
 - name: Ultimaker Cura
