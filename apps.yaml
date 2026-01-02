@@ -1,0 +1,33 @@
+# App Configuration (YAML-like format)
+# Format:
+# - name: App Name
+#   repo: https://github.com/user/repo
+#   binary: binary_name
+#   icon: path/to/icon.svg
+
+- name: PCSX2
+  repo: https://github.com/PCSX2/pcsx2
+  binary: pcsx2
+  icon: icons/pcsx2.svg
+  comment: Playstation 2 Emulator
+  categories: Game;Emulator;
+  startup_wm_class: PCSX2
+  mime_type:
+
+- name: ImHex
+  repo: https://github.com/WerWolv/ImHex
+  binary: imhex
+  icon: icons/imhex.svg
+  comment: Hex Editor
+  categories: Development;Utility;
+  startup_wm_class: imhex
+  mime_type:
+
+- name: Ultimaker Cura
+  repo: https://github.com/Ultimaker/Cura
+  binary: cura
+  icon: icons/cura.svg
+  comment: 3D Printing Slicer
+  categories: Graphics;3DGraphics;Engineering;
+  startup_wm_class: cura
+  mime_type: model/stl;model/3mf;

@@ -1,0 +1,193 @@
+#!/bin/bash
+
+# AppImager
+# Installs latest AppImages from GitHub releases
+
+set -e
+
+# Check for sudo
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run as root (sudo)"
+  exit 1
+fi
+
+# Configuration File
+CONFIG_FILE="apps.yaml"
+
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "Error: Configuration file '$CONFIG_FILE' not found."
+    exit 1
+fi
+
+# Directories
+BIN_DIR="/usr/local/bin"
+ICON_DIR="/usr/local/share/icons/hicolor/scalable/apps"
+DESKTOP_DIR="/usr/local/share/applications"
+
+# Create directories if they don't exist
+mkdir -p "$BIN_DIR"
+mkdir -p "$ICON_DIR"
+mkdir -p "$DESKTOP_DIR"
+
+install_app() {
+    local app_name="$1"
+    local repo_url="$2"
+    local binary_name="$3"
+    local icon_file="$4"
+    local comment="$5"
+    local categories="$6"
+    local startup_wm_class="$7"
+    local mime_type="$8"
+
+    echo "--------------------------------------------------"
+    echo "Installing $app_name..."
+
+    # Extract Owner/Repo from URL
+    # Remove 'https://github.com/'
+    local repo_path="${repo_url#https://github.com/}"
+    local api_url="https://api.github.com/repos/${repo_path}/releases/latest"
+
+    echo "Fetching latest release info from $api_url..."
+    
+    # Get the download URL for the AppImage
+    # We look for a file ending in .AppImage. 
+    # We filter out ARM builds to ensure we get x86_64.
+    local download_url=$(curl -s "$api_url" | grep "browser_download_url" | grep -i ".AppImage\"" | grep -v -i "arm" | head -n 1 | cut -d '"' -f 4)
+
+    if [ -z "$download_url" ]; then
+        echo "Error: Could not find an AppImage download URL for $app_name"
+        return 1
+    fi
+
+    echo "Found AppImage: $download_url"
+
+    # Download
+    echo "Downloading..."
+    curl -L -o "$BIN_DIR/$binary_name" "$download_url"
+
+    # Make executable
+    chmod +x "$BIN_DIR/$binary_name"
+    echo "Installed binary to $BIN_DIR/$binary_name"
+
+    # Install Icon
+    if [ -f "$icon_file" ]; then
+        cp "$icon_file" "$ICON_DIR/$binary_name.svg"
+        echo "Installed icon to $ICON_DIR/$binary_name.svg"
+    else
+        echo "Warning: Icon file '$icon_file' not found. Skipping icon installation."
+    fi
+
+    # Create Desktop Entry
+    local desktop_file="$DESKTOP_DIR/$binary_name.desktop"
+    cat > "$desktop_file" <<EOF
+[Desktop Entry]
+Type=Application
+Name=$app_name
+Comment=$comment
+Exec=$BIN_DIR/$binary_name
+Icon=$binary_name
+Terminal=false
+Categories=$categories
+StartupWMClass=$startup_wm_class
+MimeType=$mime_type
+EOF
+    echo "Created desktop entry at $desktop_file"
+    
+    echo "$app_name installed successfully."
+}
+
+# Main execution
+
+# Function to parse simple YAML-like format
+parse_yaml_and_install() {
+    local yaml_file="$1"
+    local name=""
+    local repo=""
+    local binary=""
+    local icon=""
+    local comment=""
+    local categories=""
+    local startup_wm_class=""
+    local mime_type=""
+
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Trim leading/trailing whitespace
+        line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+        # Skip empty lines and comments
+        [[ -z "$line" ]] && continue
+        [[ "$line" =~ ^# ]] && continue
+
+        # Check for new item start "- name: ..."
+        if [[ "$line" =~ ^-\ name:\ (.*) ]]; then
+            # If we have a previous app loaded, install it
+            if [ -n "$name" ]; then
+                install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+            fi
+            
+            # Reset variables for new app
+            name="${BASH_REMATCH[1]}"
+            repo=""
+            binary=""
+            icon=""
+            comment=""
+            categories=""
+            startup_wm_class=""
+            mime_type=""
+            
+            # Remove optional quotes
+            name=$(echo "$name" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+            
+        elif [[ "$line" =~ ^repo:\ (.*) ]]; then
+            repo="${BASH_REMATCH[1]}"
+            repo=$(echo "$repo" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+            
+        elif [[ "$line" =~ ^binary:\ (.*) ]]; then
+            binary="${BASH_REMATCH[1]}"
+            binary=$(echo "$binary" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+            
+        elif [[ "$line" =~ ^icon:\ (.*) ]]; then
+            icon="${BASH_REMATCH[1]}"
+            icon=$(echo "$icon" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+
+        elif [[ "$line" =~ ^comment:\ (.*) ]]; then
+            comment="${BASH_REMATCH[1]}"
+            comment=$(echo "$comment" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+
+        elif [[ "$line" =~ ^categories:\ (.*) ]]; then
+            categories="${BASH_REMATCH[1]}"
+            categories=$(echo "$categories" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+
+        elif [[ "$line" =~ ^startup_wm_class:\ (.*) ]]; then
+            startup_wm_class="${BASH_REMATCH[1]}"
+            startup_wm_class=$(echo "$startup_wm_class" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+
+        elif [[ "$line" =~ ^mime_type:\ (.*) ]]; then
+            mime_type="${BASH_REMATCH[1]}"
+            mime_type=$(echo "$mime_type" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+        fi
+    done < "$yaml_file"
+
+    # Install the last app found in the file
+    if [ -n "$name" ]; then
+        install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+    fi
+}
+
+echo "Starting installation..."
+parse_yaml_and_install "$CONFIG_FILE"
+
+echo "--------------------------------------------------"
+echo "Updating system caches..."
+
+if command -v update-desktop-database &> /dev/null; then
+    update-desktop-database "$DESKTOP_DIR" || true
+    echo "Desktop database updated."
+fi
+
+if command -v gtk-update-icon-cache &> /dev/null; then
+    gtk-update-icon-cache -f -t "/usr/local/share/icons/hicolor" || true
+    echo "Icon cache updated."
+fi
+
+echo "All installations complete."
