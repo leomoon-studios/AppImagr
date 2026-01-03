@@ -52,7 +52,7 @@ install_app() {
     # Get the download URL for the AppImage
     # We look for a file ending in .AppImage. 
     # We filter out ARM builds to ensure we get x86_64.
-    local download_url=$(curl -s "$api_url" | grep "browser_download_url" | grep -i ".AppImage\"" | grep -v -i "arm" | head -n 1 | cut -d '"' -f 4)
+    local download_url=$(curl -s "$api_url" | grep "browser_download_url" | grep -i ".AppImage\"" | grep -v -i "arm" | grep -v -i "arch" | head -n 1 | cut -d '"' -f 4)
 
     if [ -z "$download_url" ]; then
         echo "Error: Could not find an AppImage download URL for $app_name"
