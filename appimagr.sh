@@ -21,12 +21,14 @@ fi
 
 # Directories
 BIN_DIR="/usr/local/bin"
-ICON_DIR="/usr/local/share/icons/hicolor/scalable/apps"
+ICON_DIR_SVG="/usr/local/share/icons/hicolor/scalable/apps"
+ICON_DIR_PNG="/usr/local/share/icons/hicolor/256x256/apps"
 DESKTOP_DIR="/usr/local/share/applications"
 
 # Create directories if they don't exist
 mkdir -p "$BIN_DIR"
-mkdir -p "$ICON_DIR"
+mkdir -p "$ICON_DIR_SVG"
+mkdir -p "$ICON_DIR_PNG"
 mkdir -p "$DESKTOP_DIR"
 
 install_app() {
@@ -71,11 +73,21 @@ install_app() {
 
     # Install Icon
     if [ -f "$icon_file" ]; then
-        cp "$icon_file" "$ICON_DIR/$binary_name.svg"
-        echo "Installed icon to $ICON_DIR/$binary_name.svg"
+        local extension="${icon_file##*.}"
+        extension="${extension,,}" # Lowercase
+
+        if [[ "$extension" == "svg" ]]; then
+            cp "$icon_file" "$ICON_DIR_SVG/$binary_name.svg"
+            echo "Installed icon to $ICON_DIR_SVG/$binary_name.svg"
+        elif [[ "$extension" == "png" ]]; then
+            cp "$icon_file" "$ICON_DIR_PNG/$binary_name.png"
+            echo "Installed icon to $ICON_DIR_PNG/$binary_name.png"
+        else
+            echo "Warning: Unsupported icon extension '$extension'. Skipping icon installation."
+        fi
     elif [ -f "icons/missing.svg" ]; then
         echo "Warning: Icon file '$icon_file' not found. Using default missing icon."
-        cp "icons/missing.svg" "$ICON_DIR/$binary_name.svg"
+        cp "icons/missing.svg" "$ICON_DIR_SVG/$binary_name.svg"
     else
         echo "Warning: Icon file '$icon_file' not found and 'icons/missing.svg' is also missing. Skipping icon installation."
     fi
@@ -99,9 +111,60 @@ EOF
     echo "$app_name installed successfully."
 }
 
+# Function to show help
+show_help() {
+    echo "Usage: $0 [OPTIONS] [APP_NAME]"
+    echo "Installs or updates AppImages defined in $CONFIG_FILE."
+    echo ""
+    echo "Options:"
+    echo "  -a, --all     Update all applications"
+    echo "  -l, --list    List supported applications"
+    echo "  -h, --help    Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  sudo $0 --all     # Update all apps"
+    echo "  sudo $0 pcsx2     # Update only PCSX2"
+}
+
+# Function to list apps
+list_apps() {
+    local yaml_file="$1"
+    echo "Supported applications:"
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Trim leading/trailing whitespace
+        line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        
+        if [[ "$line" =~ ^-\ name:\ (.*) ]]; then
+            local name="${BASH_REMATCH[1]}"
+            # Remove optional quotes
+            name=$(echo "$name" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
+            echo " - $name"
+        fi
+    done < "$yaml_file"
+}
+
 # Main execution
 
-TARGET_APP="$1"
+if [[ -z "$1" ]]; then
+    show_help
+    exit 0
+fi
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    show_help
+    exit 0
+fi
+
+if [[ "$1" == "-l" ]] || [[ "$1" == "--list" ]]; then
+    list_apps "$CONFIG_FILE"
+    exit 0
+fi
+
+if [[ "$1" == "-a" ]] || [[ "$1" == "--all" ]]; then
+    TARGET_APP=""
+else
+    TARGET_APP="$1"
+fi
 
 # Function to parse simple YAML-like format
 parse_yaml_and_install() {

@@ -35,8 +35,14 @@ A simple, configurable Bash script to automate the installation of AppImages fro
     ```bash
     chmod +x appimagr.sh
 
+    # Show help
+    ./appimagr.sh --help
+
+    # List supported apps
+    ./appimagr.sh --list
+
     # Update all apps
-    sudo ./appimagr.sh
+    sudo ./appimagr.sh --all
 
     # Update a specific app (case-insensitive)
     sudo ./appimagr.sh pcsx2
