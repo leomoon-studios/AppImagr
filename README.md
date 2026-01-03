@@ -33,19 +33,19 @@ A simple, configurable Bash script to automate the installation of AppImages fro
 
 4.  **Run the Script:**
     ```bash
-    chmod +x appimagr.sh
+    chmod +x appimagr
 
     # Show help
-    ./appimagr.sh --help
+    ./appimagr --help
 
     # List supported apps
-    ./appimagr.sh --list
+    ./appimagr --list
 
     # Update all apps
-    sudo ./appimagr.sh --all
+    sudo ./appimagr --all
 
     # Update a specific app (case-insensitive)
-    sudo ./appimagr.sh pcsx2
+    sudo ./appimagr pcsx2
     ```
 
 ## Configuration (`apps.yaml`)
@@ -90,7 +90,7 @@ The configuration uses a simple YAML-like format.
 .
 ├── apps.yaml           # Configuration file
 ├── icons/              # Folder containing .svg icons
-├── appimagr.sh         # Main installer script
+├── appimagr            # Main installer script
 └── README.md           # This file
 ```
 
