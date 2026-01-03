@@ -71,3 +71,12 @@
   categories: Game;Emulator;
   startup_wm_class: PCSX2
   mime_type:
+
+- name: RustDesk
+  repo: https://github.com/rustdesk/rustdesk
+  binary: rustdesk
+  icon: icons/rustdesk.svg
+  comment: Remote Desktop Software
+  categories: Network;Utility;
+  startup_wm_class: RustDesk
+  mime_type:

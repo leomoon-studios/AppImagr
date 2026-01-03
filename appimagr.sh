@@ -73,8 +73,11 @@ install_app() {
     if [ -f "$icon_file" ]; then
         cp "$icon_file" "$ICON_DIR/$binary_name.svg"
         echo "Installed icon to $ICON_DIR/$binary_name.svg"
+    elif [ -f "icons/missing.svg" ]; then
+        echo "Warning: Icon file '$icon_file' not found. Using default missing icon."
+        cp "icons/missing.svg" "$ICON_DIR/$binary_name.svg"
     else
-        echo "Warning: Icon file '$icon_file' not found. Skipping icon installation."
+        echo "Warning: Icon file '$icon_file' not found and 'icons/missing.svg' is also missing. Skipping icon installation."
     fi
 
     # Create Desktop Entry
