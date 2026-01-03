@@ -114,16 +114,16 @@ EOF
 # Function to show help
 show_help() {
     echo "Usage: $0 [OPTIONS] [APP_NAME]"
-    echo "Installs or updates AppImages defined in $CONFIG_FILE."
+    echo "Downloads or updates AppImages defined in $CONFIG_FILE."
     echo ""
     echo "Options:"
-    echo "  -a, --all     Update all applications"
+    echo "  -a, --all     Download/update all applications"
     echo "  -l, --list    List supported applications"
     echo "  -h, --help    Show this help message"
     echo ""
     echo "Examples:"
-    echo "  sudo $0 --all     # Update all apps"
-    echo "  sudo $0 pcsx2     # Update only PCSX2"
+    echo "  sudo $0 --all     # Download/update all apps"
+    echo "  sudo $0 pcsx2     # Download/update only PCSX2"
 }
 
 # Function to list apps
