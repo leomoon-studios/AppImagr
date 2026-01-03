@@ -34,7 +34,16 @@
   comment: Photo Workflow Software
   categories: Graphics;Photography;
   startup_wm_class: Darktable
-  mime_type: image/jpeg;image/png;image/tiff;
+  mime_type: image/x-raw;image/jpeg;image/png;image/tiff;
+
+- name: Duckstation
+  repo: https://github.com/stenzek/duckstation
+  binary: duckstation
+  icon: icons/duckstation.svg
+  comment: Playstation 1 Emulator
+  categories: Game;Emulator;
+  startup_wm_class: Duckstation
+  mime_type:
 
 - name: Electorrent
   repo: https://github.com/tympanix/Electorrent
@@ -134,6 +143,24 @@
   categories: Game;Emulator;
   startup_wm_class: PCSX2
   mime_type:
+
+- name: RapidRAW
+  repo: https://github.com/CyberTimon/RapidRAW
+  binary: rapidraw
+  icon: icons/rapidraw.png
+  comment: RAW Image editor
+  categories: Graphics;Photography;
+  startup_wm_class: RapidRAW
+  mime_type: image/x-raw;image/jpeg;image/png;
+
+- name: RawTherapee
+  repo: https://github.com/RawTherapee/RawTherapee
+  binary: rawtherapee
+  icon: icons/rawtherapee.svg
+  comment: RAW Image editor
+  categories: Graphics;Photography;
+  startup_wm_class: RawTherapee
+  mime_type: image/x-raw;image/jpeg;image/png;
 
 - name: RustDesk
   repo: https://github.com/rustdesk/rustdesk
