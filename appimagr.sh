@@ -98,6 +98,8 @@ EOF
 
 # Main execution
 
+TARGET_APP="$1"
+
 # Function to parse simple YAML-like format
 parse_yaml_and_install() {
     local yaml_file="$1"
@@ -122,7 +124,10 @@ parse_yaml_and_install() {
         if [[ "$line" =~ ^-\ name:\ (.*) ]]; then
             # If we have a previous app loaded, install it
             if [ -n "$name" ]; then
-                install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+                # Check if we should install this app based on target argument
+                if [ -z "$TARGET_APP" ] || [[ "${name,,}" == "${TARGET_APP,,}" ]]; then
+                    install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+                fi
             fi
             
             # Reset variables for new app
@@ -170,7 +175,9 @@ parse_yaml_and_install() {
 
     # Install the last app found in the file
     if [ -n "$name" ]; then
-        install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+        if [ -z "$TARGET_APP" ] || [[ "${name,,}" == "${TARGET_APP,,}" ]]; then
+            install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+        fi
     fi
 }
 

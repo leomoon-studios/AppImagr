@@ -34,7 +34,12 @@ A simple, configurable Bash script to automate the installation of AppImages fro
 4.  **Run the Script:**
     ```bash
     chmod +x appimagr.sh
+
+    # Update all apps
     sudo ./appimagr.sh
+
+    # Update a specific app (case-insensitive)
+    sudo ./appimagr.sh pcsx2
     ```
 
 ## Configuration (`apps.yaml`)
