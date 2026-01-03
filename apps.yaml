@@ -9,6 +9,33 @@
 #   startup_wm_class: WMClass (optional)
 #   mime_type: mime/type; (optional)
 
+- name: Cura
+  repo: https://github.com/Ultimaker/Cura
+  binary: cura
+  icon: icons/cura.svg
+  comment: 3D Printing Slicer
+  categories: Graphics;3DGraphics;Engineering;
+  startup_wm_class: cura
+  mime_type: model/stl;model/3mf;
+
+- name: Darktable
+  repo: https://github.com/darktable-org/darktable
+  binary: darktable
+  icon: icons/darktable.svg
+  comment: Photo Workflow Software
+  categories: Graphics;Photography;
+  startup_wm_class: Darktable
+  mime_type: image/jpeg;image/png;image/tiff;
+
+- name: FontForge
+  repo: https://github.com/fontforge/fontforge
+  binary: fontforge
+  icon: icons/fontforge.svg
+  comment: Font Editor
+  categories: Graphics;Utility;
+  startup_wm_class: FontForge
+  mime_type: application/x-font-ttf;application/x-font-otf;
+
 - name: FreeCAD
   repo: https://github.com/FreeCAD/FreeCAD
   binary: freecad
@@ -44,12 +71,3 @@
   categories: Game;Emulator;
   startup_wm_class: PCSX2
   mime_type:
-
-- name: Cura
-  repo: https://github.com/Ultimaker/Cura
-  binary: cura
-  icon: icons/cura.svg
-  comment: 3D Printing Slicer
-  categories: Graphics;3DGraphics;Engineering;
-  startup_wm_class: cura
-  mime_type: model/stl;model/3mf;
