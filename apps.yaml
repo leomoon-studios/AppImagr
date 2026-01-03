@@ -9,6 +9,15 @@
 #   startup_wm_class: WMClass (optional)
 #   mime_type: mime/type; (optional)
 
+- name: Audacity
+  repo: https://github.com/audacity/audacity
+  binary: audacity
+  icon: icons/audacity.svg
+  comment: Audio Editor
+  categories: AudioVideo;Audio;
+  startup_wm_class: Audacity
+  mime_type: application/x-audacity-project;application/x-audacity-project+sqlite3;
+
 - name: Cura
   repo: https://github.com/Ultimaker/Cura
   binary: cura
@@ -26,6 +35,15 @@
   categories: Graphics;Photography;
   startup_wm_class: Darktable
   mime_type: image/jpeg;image/png;image/tiff;
+
+- name: Electorrent
+  repo: https://github.com/tympanix/Electorrent
+  binary: electorrent
+  icon: icons/electorrent.png
+  comment: BitTorrent Client
+  categories: Network;Utility;
+  startup_wm_class: Electorrent
+  mime_type: application/x-bittorrent;
 
 - name: FontForge
   repo: https://github.com/fontforge/fontforge
@@ -54,6 +72,24 @@
   startup_wm_class: imhex
   mime_type:
 
+- name: Joplin
+  repo: https://github.com/laurent22/joplin
+  binary: joplin
+  icon: icons/joplin.svg
+  comment: Note-Taking and To-Do Application
+  categories: Office;
+  startup_wm_class: Joplin
+  mime_type: x-scheme-handler/joplin;
+
+- name: KeePassXC
+  repo: https://github.com/keepassxreboot/keepassxc
+  binary: keepassxc
+  icon: icons/keepassxc.svg
+  comment: Password Manager
+  categories: Utility;Security;
+  startup_wm_class: KeePassXC
+  mime_type: application/x-keepass2;
+
 - name: LMMS
   repo: https://github.com/LMMS/lmms
   binary: lmms
@@ -62,6 +98,33 @@
   categories: AudioVideo;Audio;
   startup_wm_class: lmms
   mime_type: audio/x-lmms-project;
+
+- name: MuseScore
+  repo: https://github.com/musescore/MuseScore
+  binary: musescore
+  icon: icons/musescore.svg
+  comment: Music Notation Software
+  categories: AudioVideo;Audio;
+  startup_wm_class: MuseScore
+  mime_type: application/x-musescore;application/x-musescore+xml;application/vnd.recordare.musicxml+xml;
+
+- name: MyPaint
+  repo: https://github.com/mypaint/mypaint
+  binary: mypaint
+  icon: icons/mypaint.svg
+  comment: Drawing and Painting Program
+  categories: Graphics;2DGraphics;
+  startup_wm_class: mypaint
+  mime_type: image/openraster;image/png;image/jpeg;
+
+- name: OpenShot
+  repo: https://github.com/OpenShot/openshot-qt
+  binary: openshot-qt
+  icon: icons/openshot.svg
+  comment: Video Editor
+  categories: AudioVideo;Video;
+  startup_wm_class: openshot
+  mime_type:
 
 - name: PCSX2
   repo: https://github.com/PCSX2/pcsx2
@@ -80,3 +143,21 @@
   categories: Network;Utility;
   startup_wm_class: RustDesk
   mime_type:
+
+- name: Shotcut
+  repo: https://github.com/mltframework/shotcut
+  binary: shotcut
+  icon: icons/shotcut.svg
+  comment: Video Editor
+  categories: AudioVideo;Video;
+  startup_wm_class: Shotcut
+  mime_type: application/vnd.mlt+xml;
+
+- name: VSCodium
+  repo: https://github.com/VSCodium/vscodium
+  binary: codium
+  icon: icons/vscodium.svg
+  comment: Free Open-Source Code Editor
+  categories: Utility;Development;IDE;
+  startup_wm_class: VSCodium
+  mime_type: text/plain;inode/directory;
