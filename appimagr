@@ -113,17 +113,20 @@ EOF
 
 # Function to show help
 show_help() {
-    echo "Usage: $0 [OPTIONS] [APP_NAME]"
+    echo "Usage: $0 [OPTIONS] [APP_NAME...]"
     echo "Downloads or updates AppImages defined in $CONFIG_FILE."
     echo ""
     echo "Options:"
     echo "  -a, --all     Download/update all applications"
+    echo "  -y, --yes     Automatic yes to prompts (skip confirmation)"
     echo "  -l, --list    List supported applications"
     echo "  -h, --help    Show this help message"
     echo ""
     echo "Examples:"
-    echo "  sudo $0 --all     # Download/update all apps"
-    echo "  sudo $0 pcsx2     # Download/update only PCSX2"
+    echo "  sudo $0 --all              # Download/update all apps"
+    echo "  sudo $0 pcsx2              # Download/update only PCSX2"
+    echo "  sudo $0 cura pcsx2 imhex   # Download/update multiple apps"
+    echo "  sudo $0 -y cura pcsx2      # Install without confirmation"
 }
 
 # Function to list apps
@@ -160,14 +163,39 @@ if [[ "$1" == "-l" ]] || [[ "$1" == "--list" ]]; then
     exit 0
 fi
 
-if [[ "$1" == "-a" ]] || [[ "$1" == "--all" ]]; then
-    TARGET_APP=""
-else
-    TARGET_APP="$1"
+# Parse arguments
+AUTO_YES=false
+INSTALL_ALL=false
+TARGET_APPS=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -y|--yes)
+            AUTO_YES=true
+            shift
+            ;;
+        -a|--all)
+            INSTALL_ALL=true
+            shift
+            ;;
+        *)
+            TARGET_APPS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# If --all flag is set, clear TARGET_APPS to install everything
+if [ "$INSTALL_ALL" = true ]; then
+    TARGET_APPS=()
 fi
 
-# Function to parse simple YAML-like format
-parse_yaml_and_install() {
+# Arrays to store apps to install
+declare -a APPS_TO_INSTALL_NAMES
+declare -a APPS_TO_INSTALL_DATA
+
+# Function to collect apps that match the target criteria
+collect_apps() {
     local yaml_file="$1"
     local name=""
     local repo=""
@@ -188,11 +216,23 @@ parse_yaml_and_install() {
 
         # Check for new item start "- name: ..."
         if [[ "$line" =~ ^-\ name:\ (.*) ]]; then
-            # If we have a previous app loaded, install it
+            # If we have a previous app loaded, check if it should be collected
             if [ -n "$name" ]; then
-                # Check if we should install this app based on target argument
-                if [ -z "$TARGET_APP" ] || [[ "${name,,}" == "${TARGET_APP,,}" ]]; then
-                    install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+                should_collect=false
+                if [ ${#TARGET_APPS[@]} -eq 0 ]; then
+                    should_collect=true
+                else
+                    for target in "${TARGET_APPS[@]}"; do
+                        if [[ "${name,,}" == "${target,,}" ]]; then
+                            should_collect=true
+                            break
+                        fi
+                    done
+                fi
+                if [ "$should_collect" = true ]; then
+                    APPS_TO_INSTALL_NAMES+=("$name")
+                    # Store app data as a delimited string
+                    APPS_TO_INSTALL_DATA+=("$name|$repo|$binary|$icon|$comment|$categories|$startup_wm_class|$mime_type")
                 fi
             fi
             
@@ -239,16 +279,60 @@ parse_yaml_and_install() {
         fi
     done < "$yaml_file"
 
-    # Install the last app found in the file
+    # Collect the last app found in the file
     if [ -n "$name" ]; then
-        if [ -z "$TARGET_APP" ] || [[ "${name,,}" == "${TARGET_APP,,}" ]]; then
-            install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+        should_collect=false
+        if [ ${#TARGET_APPS[@]} -eq 0 ]; then
+            should_collect=true
+        else
+            for target in "${TARGET_APPS[@]}"; do
+                if [[ "${name,,}" == "${target,,}" ]]; then
+                    should_collect=true
+                    break
+                fi
+            done
+        fi
+        if [ "$should_collect" = true ]; then
+            APPS_TO_INSTALL_NAMES+=("$name")
+            APPS_TO_INSTALL_DATA+=("$name|$repo|$binary|$icon|$comment|$categories|$startup_wm_class|$mime_type")
         fi
     fi
 }
 
+# Collect apps to install
+collect_apps "$CONFIG_FILE"
+
+# Check if any apps were found
+if [ ${#APPS_TO_INSTALL_NAMES[@]} -eq 0 ]; then
+    echo "No matching applications found."
+    exit 1
+fi
+
+# Show apps to be installed and ask for confirmation
+echo "The following AppImage(s) will be installed/updated:"
+echo ""
+for app_name in "${APPS_TO_INSTALL_NAMES[@]}"; do
+    echo "  - $app_name"
+done
+echo ""
+
+if [ "$AUTO_YES" = false ]; then
+    read -p "Do you want to continue? [Y/n] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]] && [[ ! -z $REPLY ]]; then
+        echo "Installation cancelled."
+        exit 0
+    fi
+fi
+
+echo ""
 echo "Starting installation..."
-parse_yaml_and_install "$CONFIG_FILE"
+
+# Install collected apps
+for app_data in "${APPS_TO_INSTALL_DATA[@]}"; do
+    IFS='|' read -r name repo binary icon comment categories startup_wm_class mime_type <<< "$app_data"
+    install_app "$name" "$repo" "$binary" "$icon" "$comment" "$categories" "$startup_wm_class" "$mime_type"
+done
 
 echo "--------------------------------------------------"
 echo "Updating system caches..."

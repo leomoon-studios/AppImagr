@@ -46,7 +46,16 @@ A simple, configurable Bash script to automate the installation of AppImages fro
 
     # Update a specific app (case-insensitive)
     sudo ./appimagr pcsx2
+
+    # Update multiple apps at once
+    sudo ./appimagr cura pcsx2 imhex
+
+    # Skip confirmation prompt (like apt -y)
+    sudo ./appimagr -y pcsx2
+    sudo ./appimagr --yes --all
     ```
+
+    The script will show you a list of apps to be installed and ask for confirmation before proceeding (similar to `apt`). Use `-y` or `--yes` to skip the prompt.
 
 ## Configuration (`apps.yaml`)
 
