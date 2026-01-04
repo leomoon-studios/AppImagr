@@ -126,11 +126,11 @@
   startup_wm_class: mypaint
   mime_type: image/openraster;image/png;image/jpeg;
 
-- name: ONLYOFFICE Desktop Editors
-  repo: https://github.com/ONLYOFFICE/DesktopEditors
+- name: ONLYOFFICE
+  repo: https://github.com/ONLYOFFICE/appimage-desktopeditors
   binary: onlyoffice
   icon: icons/onlyoffice.svg
-  comment: Office Suite
+  comment: ONLYOFFICE desktop editors office suite
   categories: Office;Productivity;
   startup_wm_class: onlyoffice
   mime_type: application/vnd.oasis.opendocument.text;application/vnd.oasis.opendocument.spreadsheet;application/vnd.oasis.opendocument.presentation;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.openxmlformats-officedocument.presentationml.presentation;
