@@ -1,35 +1,27 @@
 #!/bin/bash
 
-# AppImager
+# AppImagr
 # Installs latest AppImages from GitHub releases
 
 set -e
 
-# Check for sudo
-if [ "$EUID" -ne 0 ]; then
-  echo "Please run as root (sudo)"
-  exit 1
-fi
+# GitHub repository for fetching config and icons
+GITHUB_REPO="leomoon-studios/AppImagr"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/master"
 
-# Configuration File
-CONFIG_FILE="apps.yaml"
-
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Error: Configuration file '$CONFIG_FILE' not found."
-    exit 1
-fi
+# Check for sudo (not required for --help, --list, or --update)
+check_sudo() {
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root (sudo)"
+        exit 1
+    fi
+}
 
 # Directories
 BIN_DIR="/usr/local/bin"
 ICON_DIR_SVG="/usr/local/share/icons/hicolor/scalable/apps"
 ICON_DIR_PNG="/usr/local/share/icons/hicolor/256x256/apps"
 DESKTOP_DIR="/usr/local/share/applications"
-
-# Create directories if they don't exist
-mkdir -p "$BIN_DIR"
-mkdir -p "$ICON_DIR_SVG"
-mkdir -p "$ICON_DIR_PNG"
-mkdir -p "$DESKTOP_DIR"
 
 install_app() {
     local app_name="$1"
@@ -71,25 +63,36 @@ install_app() {
     chmod +x "$BIN_DIR/$binary_name"
     echo "Installed binary to $BIN_DIR/$binary_name"
 
-    # Install Icon
-    if [ -f "$icon_file" ]; then
-        local extension="${icon_file##*.}"
-        extension="${extension,,}" # Lowercase
+    # Install Icon (download from GitHub)
+    local icon_url="$GITHUB_RAW_URL/$icon_file"
+    local extension="${icon_file##*.}"
+    extension="${extension,,}" # Lowercase
 
-        if [[ "$extension" == "svg" ]]; then
-            cp "$icon_file" "$ICON_DIR_SVG/$binary_name.svg"
+    echo "Downloading icon from $icon_url..."
+    if [[ "$extension" == "svg" ]]; then
+        if curl -sfL -o "$ICON_DIR_SVG/$binary_name.svg" "$icon_url"; then
             echo "Installed icon to $ICON_DIR_SVG/$binary_name.svg"
-        elif [[ "$extension" == "png" ]]; then
-            cp "$icon_file" "$ICON_DIR_PNG/$binary_name.png"
+        else
+            echo "Warning: Could not download icon. Trying missing.svg..."
+            if curl -sfL -o "$ICON_DIR_SVG/$binary_name.svg" "$GITHUB_RAW_URL/icons/missing.svg"; then
+                echo "Installed fallback icon."
+            else
+                echo "Warning: Could not download fallback icon. Skipping."
+            fi
+        fi
+    elif [[ "$extension" == "png" ]]; then
+        if curl -sfL -o "$ICON_DIR_PNG/$binary_name.png" "$icon_url"; then
             echo "Installed icon to $ICON_DIR_PNG/$binary_name.png"
         else
-            echo "Warning: Unsupported icon extension '$extension'. Skipping icon installation."
+            echo "Warning: Could not download icon. Trying missing.svg..."
+            if curl -sfL -o "$ICON_DIR_SVG/$binary_name.svg" "$GITHUB_RAW_URL/icons/missing.svg"; then
+                echo "Installed fallback icon."
+            else
+                echo "Warning: Could not download fallback icon. Skipping."
+            fi
         fi
-    elif [ -f "icons/missing.svg" ]; then
-        echo "Warning: Icon file '$icon_file' not found. Using default missing icon."
-        cp "icons/missing.svg" "$ICON_DIR_SVG/$binary_name.svg"
     else
-        echo "Warning: Icon file '$icon_file' not found and 'icons/missing.svg' is also missing. Skipping icon installation."
+        echo "Warning: Unsupported icon extension '$extension'. Skipping icon installation."
     fi
 
     # Create Desktop Entry
@@ -114,24 +117,50 @@ EOF
 # Function to show help
 show_help() {
     echo "Usage: $0 [OPTIONS] [APP_NAME...]"
-    echo "Downloads or updates AppImages defined in $CONFIG_FILE."
+    echo "Downloads or updates AppImages from the AppImagr repository."
     echo ""
     echo "Options:"
-    echo "  -a, --all     Download/update all applications"
-    echo "  -y, --yes     Automatic yes to prompts (skip confirmation)"
-    echo "  -l, --list    List supported applications"
-    echo "  -h, --help    Show this help message"
+    echo "  -a, --all      Download/update all applications"
+    echo "  -y, --yes      Automatic yes to prompts (skip confirmation)"
+    echo "  -l, --list     List supported applications"
+    echo "  -u, --update   Update appimagr itself to the latest version"
+    echo "  -h, --help     Show this help message"
     echo ""
     echo "Examples:"
     echo "  sudo $0 --all              # Download/update all apps"
     echo "  sudo $0 pcsx2              # Download/update only PCSX2"
     echo "  sudo $0 cura pcsx2 imhex   # Download/update multiple apps"
     echo "  sudo $0 -y cura pcsx2      # Install without confirmation"
+    echo "  sudo $0 --update           # Update appimagr to latest version"
 }
 
-# Function to list apps
+# Function to update appimagr itself
+update_self() {
+    echo "Updating appimagr..."
+    local script_url="$GITHUB_RAW_URL/appimagr"
+    local tmp_file=$(mktemp)
+    
+    if curl -sfL -o "$tmp_file" "$script_url"; then
+        chmod +x "$tmp_file"
+        mv "$tmp_file" "$BIN_DIR/appimagr"
+        echo "appimagr updated successfully!"
+    else
+        rm -f "$tmp_file"
+        echo "Error: Failed to download the latest version."
+        exit 1
+    fi
+}
+
+# Function to list apps (from remote YAML)
 list_apps() {
-    local yaml_file="$1"
+    echo "Fetching app list from repository..."
+    local yaml_content=$(curl -sf "$GITHUB_RAW_URL/apps.yaml")
+    
+    if [ -z "$yaml_content" ]; then
+        echo "Error: Could not fetch apps.yaml from repository."
+        exit 1
+    fi
+    
     echo "Supported applications:"
     while IFS= read -r line || [ -n "$line" ]; do
         # Trim leading/trailing whitespace
@@ -143,7 +172,7 @@ list_apps() {
             name=$(echo "$name" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
             echo " - $name"
         fi
-    done < "$yaml_file"
+    done <<< "$yaml_content"
 }
 
 # Main execution
@@ -159,9 +188,24 @@ if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
 fi
 
 if [[ "$1" == "-l" ]] || [[ "$1" == "--list" ]]; then
-    list_apps "$CONFIG_FILE"
+    list_apps
     exit 0
 fi
+
+if [[ "$1" == "-u" ]] || [[ "$1" == "--update" ]]; then
+    check_sudo
+    update_self
+    exit 0
+fi
+
+# From here on, sudo is required
+check_sudo
+
+# Create directories if they don't exist
+mkdir -p "$BIN_DIR"
+mkdir -p "$ICON_DIR_SVG"
+mkdir -p "$ICON_DIR_PNG"
+mkdir -p "$DESKTOP_DIR"
 
 # Parse arguments
 AUTO_YES=false
@@ -194,9 +238,18 @@ fi
 declare -a APPS_TO_INSTALL_NAMES
 declare -a APPS_TO_INSTALL_DATA
 
+# Fetch YAML content from GitHub
+echo "Fetching app list from repository..."
+YAML_CONTENT=$(curl -sf "$GITHUB_RAW_URL/apps.yaml")
+
+if [ -z "$YAML_CONTENT" ]; then
+    echo "Error: Could not fetch apps.yaml from repository."
+    exit 1
+fi
+
 # Function to collect apps that match the target criteria
 collect_apps() {
-    local yaml_file="$1"
+    local yaml_content="$1"
     local name=""
     local repo=""
     local binary=""
@@ -277,7 +330,7 @@ collect_apps() {
             mime_type="${BASH_REMATCH[1]}"
             mime_type=$(echo "$mime_type" | sed 's/^"//;s/"$//;s/^'"'"'//;s/'"'"'$//')
         fi
-    done < "$yaml_file"
+    done <<< "$yaml_content"
 
     # Collect the last app found in the file
     if [ -n "$name" ]; then
@@ -300,7 +353,7 @@ collect_apps() {
 }
 
 # Collect apps to install
-collect_apps "$CONFIG_FILE"
+collect_apps "$YAML_CONTENT"
 
 # Check if any apps were found
 if [ ${#APPS_TO_INSTALL_NAMES[@]} -eq 0 ]; then

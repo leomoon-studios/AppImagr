@@ -1,65 +1,82 @@
 # AppImagr
 
-A simple, configurable Bash script to automate the installation of AppImages from GitHub Releases. It downloads the latest version, installs it to `/usr/local/bin`, sets up user-provided icons, and creates desktop entries for system-wide integration.
+A simple Bash tool that acts as a package manager for GitHub-hosted AppImages. It automatically fetches the latest releases, installs them to `/usr/local/bin`, downloads icons, and creates desktop entries for full system integration.
+
+**No configuration needed** — the app list and icons are fetched directly from this repository.
 
 ## Features
 
-- **Automated Downloads**: Fetches the latest release from GitHub repositories.
+- **One-Command Install**: Install `appimagr` with a single `curl` command.
+- **Always Up-to-Date**: App list (`apps.yaml`) and icons are fetched from GitHub on every run.
+- **Self-Updating**: Update `appimagr` itself with `--update`.
+- **Automated Downloads**: Fetches the latest AppImage releases from GitHub repositories.
 - **System Integration**: Installs binaries to `/usr/local/bin` and creates `.desktop` files.
-- **Icon Support**: Installs user-provided SVG icons to the system icon theme directory.
+- **Icon Support**: Automatically downloads and installs SVG/PNG icons.
 - **Architecture Filtering**: Automatically selects `x86_64` builds and filters out ARM versions.
-- **Configurable**: Easily add or remove apps using a YAML-like configuration file (`apps.yaml`).
+- **apt-like Interface**: Shows what will be installed and asks for confirmation.
 - **Cache Updates**: Automatically updates desktop database and icon caches.
+
+## Installation
+
+Install `appimagr` system-wide with a single command:
+
+```bash
+sudo curl -fL -o /usr/local/bin/appimagr https://raw.githubusercontent.com/leomoon-studios/AppImagr/master/appimagr && sudo chmod +x /usr/local/bin/appimagr
+```
 
 ## Prerequisites
 
-- Linux environment.
+- Linux environment
 - `curl`
-- `sudo` privileges.
+- `sudo` privileges (for installation)
 
 ## Usage
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <your-repo-url>
-    cd <repo-name>
-    ```
+```bash
+# Show help (no sudo required)
+appimagr --help
 
-2.  **Prepare Icons:**
-    Place your SVG icons in the `icons/` directory. Ensure the filenames match what you specify in `apps.yaml`.
+# List all available apps (no sudo required)
+appimagr --list
 
-3.  **Configure Apps:**
-    Edit `apps.yaml` to define the applications you want to install.
+# Install/update a specific app
+sudo appimagr pcsx2
 
-4.  **Run the Script:**
-    ```bash
-    chmod +x appimagr
+# Install/update multiple apps at once
+sudo appimagr cura pcsx2 imhex
 
-    # Show help
-    ./appimagr --help
+# Install/update all available apps
+sudo appimagr --all
 
-    # List supported apps
-    ./appimagr --list
+# Skip confirmation prompt (like apt -y)
+sudo appimagr -y pcsx2
+sudo appimagr --yes --all
 
-    # Update all apps
-    sudo ./appimagr --all
+# Update appimagr itself to the latest version
+sudo appimagr --update
+```
 
-    # Update a specific app (case-insensitive)
-    sudo ./appimagr pcsx2
+The script will show you a list of apps to be installed and ask for confirmation before proceeding (similar to `apt`). Use `-y` or `--yes` to skip the prompt.
 
-    # Update multiple apps at once
-    sudo ./appimagr cura pcsx2 imhex
+## How It Works
 
-    # Skip confirmation prompt (like apt -y)
-    sudo ./appimagr -y pcsx2
-    sudo ./appimagr --yes --all
-    ```
+1. **Fetches `apps.yaml`** from this GitHub repository to get the list of available apps.
+2. **Matches your request** against the app list (case-insensitive).
+3. **Shows confirmation** of what will be installed.
+4. **Downloads the latest AppImage** from each app's GitHub releases.
+5. **Downloads the icon** from this repository.
+6. **Creates a `.desktop` file** for system menu integration.
+7. **Updates system caches** (desktop database and icon cache).
 
-    The script will show you a list of apps to be installed and ask for confirmation before proceeding (similar to `apt`). Use `-y` or `--yes` to skip the prompt.
+## Available Apps
 
-## Configuration (`apps.yaml`)
+Run `appimagr --list` to see all available applications, or check the [apps.yaml](apps.yaml) file.
 
-The configuration uses a simple YAML-like format.
+## Contributing
+
+Want to add a new app? Open a PR that adds an entry to `apps.yaml` and the corresponding icon to the `icons/` directory.
+
+### App Configuration Format (`apps.yaml`)
 
 ```yaml
 - name: Application Name
@@ -72,16 +89,18 @@ The configuration uses a simple YAML-like format.
   mime_type: application/x-extension;
 ```
 
-- **name**: The display name of the application (used in the Desktop Entry).
-- **repo**: The URL to the GitHub repository.
-- **binary**: The name you want the executable to have in `/usr/local/bin`.
-- **icon**: Relative path to the icon file (must be provided by the user).
-- **comment**: (Optional) Tooltip description for the app.
-- **categories**: (Optional) Semicolon-separated list of menu categories.
-- **startup_wm_class**: (Optional) Helps the window manager group windows.
-- **mime_type**: (Optional) Semicolon-separated list of file types the app can open.
+| Field              | Required | Description                                            |
+| ------------------ | -------- | ------------------------------------------------------ |
+| `name`             | Yes      | Display name (used in desktop entry)                   |
+| `repo`             | Yes      | GitHub repository URL                                  |
+| `binary`           | Yes      | Name of the executable in `/usr/local/bin`             |
+| `icon`             | Yes      | Path to icon file in this repo (e.g., `icons/app.svg`) |
+| `comment`          | No       | Tooltip description                                    |
+| `categories`       | No       | Semicolon-separated menu categories                    |
+| `startup_wm_class` | No       | Window manager class for grouping                      |
+| `mime_type`        | No       | Semicolon-separated MIME types                         |
 
-### Example
+### Example Entry
 
 ```yaml
 - name: PCSX2
@@ -93,17 +112,18 @@ The configuration uses a simple YAML-like format.
   startup_wm_class: PCSX2
 ```
 
-## Directory Structure
+## Repository Structure
 
 ```
 .
-├── apps.yaml           # Configuration file
-├── icons/              # Folder containing .svg icons
-├── appimagr            # Main installer script
-└── README.md           # This file
+├── apps.yaml           # App definitions (fetched remotely)
+├── icons/              # App icons (fetched remotely)
+├── appimagr            # Main script
+└── README.md
 ```
 
 ## Notes
 
-- The script currently filters for `.AppImage` files and excludes filenames containing "arm" to target x86_64 systems.
-- It requires `sudo` because it writes to `/usr/local/`.
+- The script filters for `.AppImage` files and excludes filenames containing "arm" to target x86_64 systems.
+- `--help` and `--list` work without sudo.
+- All other operations require `sudo` because they write to `/usr/local/`.
