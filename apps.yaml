@@ -54,6 +54,15 @@
   startup_wm_class: Electorrent
   mime_type: application/x-bittorrent;
 
+- name: Flameshot
+  repo: https://github.com/flameshot-org/flameshot
+  binary: flameshot
+  icon: icons/flameshot.svg
+  comment: Screenshot Tool
+  categories: Utility;Graphics;
+  startup_wm_class: Flameshot
+  mime_type:
+
 - name: FontForge
   repo: https://github.com/fontforge/fontforge
   binary: fontforge
