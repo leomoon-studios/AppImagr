@@ -21,7 +21,7 @@ A simple Bash tool that acts as a package manager for GitHub-hosted AppImages. I
 Install `appimagr` system-wide with a single command:
 
 ```bash
-sudo curl -fL -o /usr/local/bin/appimagr https://raw.githubusercontent.com/leomoon-studios/AppImagr/master/appimagr && sudo chmod +x /usr/local/bin/appimagr
+sudo curl -fL -o /usr/local/bin/appimagr https://raw.githubusercontent.com/leomoon-studios/AppImagr/refs/heads/master/appimagr && sudo chmod +x /usr/local/bin/appimagr
 ```
 
 ## Prerequisites
