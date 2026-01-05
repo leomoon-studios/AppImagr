@@ -7,7 +7,7 @@ set -e
 
 # GitHub repository for fetching config and icons
 GITHUB_REPO="leomoon-studios/AppImagr"
-GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/master"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/refs/heads/master"
 
 # Check for sudo (not required for --help, --list, or --update)
 check_sudo() {
