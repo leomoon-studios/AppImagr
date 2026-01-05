@@ -142,7 +142,7 @@ update_self() {
     
     if curl -sfL -o "$tmp_file" "$script_url"; then
         mv "$tmp_file" "$BIN_DIR/appimagr"
-        chmod +x "$BIN_DIR/appimagr"
+        chmod 755 "$BIN_DIR/appimagr"
         echo "appimagr updated successfully!"
     else
         rm -f "$tmp_file"
