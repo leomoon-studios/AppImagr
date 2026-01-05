@@ -141,8 +141,8 @@ update_self() {
     local tmp_file=$(mktemp)
     
     if curl -sfL -o "$tmp_file" "$script_url"; then
-        chmod +x "$tmp_file"
         mv "$tmp_file" "$BIN_DIR/appimagr"
+        chmod +x "$BIN_DIR/appimagr"
         echo "appimagr updated successfully!"
     else
         rm -f "$tmp_file"
