@@ -244,6 +244,15 @@ if [ "$SYSTEM_INSTALL" = true ]; then
     check_sudo
 fi
 
+# Warn if running as root without --system (would install to /root/Applications)
+if [ "$EUID" -eq 0 ] && [ "$SYSTEM_INSTALL" = false ]; then
+    echo "Error: Running as root without --system would install to /root/Applications."
+    echo "Either:"
+    echo "  - Run without sudo for user-local install:    appimagr <app>"
+    echo "  - Use --system for system-wide install:       sudo appimagr --system <app>"
+    exit 1
+fi
+
 # Set directories based on installation mode
 set_directories
 
