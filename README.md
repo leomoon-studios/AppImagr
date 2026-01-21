@@ -1,8 +1,10 @@
 # AppImagr
 
-A simple Bash tool that acts as a package manager for GitHub-hosted AppImages. It automatically fetches the latest releases, installs them to `/usr/local/bin`, downloads icons, and creates desktop entries for full system integration.
+A simple Bash tool that acts as a package manager for GitHub-hosted AppImages. It automatically fetches the latest releases, installs them to `~/Applications`, downloads icons, and creates desktop entries for full system integration.
 
 **No configuration needed** — the app list and icons are fetched directly from this repository.
+
+**No sudo required** — everything is installed to user-local directories by default. Use `--system` for system-wide installation.
 
 ## Features
 
@@ -10,15 +12,16 @@ A simple Bash tool that acts as a package manager for GitHub-hosted AppImages. I
 - **Always Up-to-Date**: App list (`apps.yaml`) and icons are fetched from GitHub on every run.
 - **Self-Updating**: Update `appimagr` itself with `--update`.
 - **Automated Downloads**: Fetches the latest AppImage releases from GitHub repositories.
-- **System Integration**: Installs binaries to `/usr/local/bin` and creates `.desktop` files.
-- **Icon Support**: Automatically downloads and installs SVG/PNG icons.
+- **User-Local Installation**: Installs AppImages to `~/Applications` and creates `.desktop` files in `~/.local/share/applications`.
+- **System-Wide Installation**: Optional `--system` flag installs to `/opt/appimages` for all users (requires sudo).
+- **Icon Support**: Automatically downloads and installs SVG/PNG icons to `~/.local/share/icons`.
 - **Architecture Filtering**: Automatically selects `x86_64` builds and filters out ARM versions.
 - **apt-like Interface**: Shows what will be installed and asks for confirmation.
 - **Cache Updates**: Automatically updates desktop database and icon caches.
 
 ## Installation
 
-Install `appimagr` system-wide with a single command:
+Install `appimagr` with a single command:
 
 ```bash
 sudo curl -fL -o /usr/local/bin/appimagr https://raw.githubusercontent.com/leomoon-studios/AppImagr/refs/heads/master/appimagr && sudo chmod +x /usr/local/bin/appimagr
@@ -28,31 +31,35 @@ sudo curl -fL -o /usr/local/bin/appimagr https://raw.githubusercontent.com/leomo
 
 - Linux environment
 - `curl`
-- `sudo` privileges (for installation)
+- `sudo` privileges (only for `--update` or `--system`)
 
 ## Usage
 
 ```bash
-# Show help (no sudo required)
+# Show help
 appimagr --help
 
-# List all available apps (no sudo required)
+# List all available apps
 appimagr --list
 
-# Install/update a specific app
-sudo appimagr pcsx2
+# Install/update a specific app (user-local)
+appimagr pcsx2
 
 # Install/update multiple apps at once
-sudo appimagr cura pcsx2 imhex
+appimagr cura pcsx2 imhex
 
 # Install/update all available apps
-sudo appimagr --all
+appimagr --all
 
 # Skip confirmation prompt (like apt -y)
-sudo appimagr -y pcsx2
-sudo appimagr --yes --all
+appimagr -y pcsx2
+appimagr --yes --all
 
-# Update appimagr itself to the latest version
+# Install system-wide to /opt/appimages (requires sudo)
+sudo appimagr --system pcsx2
+sudo appimagr -s --all
+
+# Update appimagr itself to the latest version (requires sudo)
 sudo appimagr --update
 ```
 
@@ -93,7 +100,7 @@ Want to add a new app? Open a PR that adds an entry to `apps.yaml` and the corre
 | ------------------ | -------- | ------------------------------------------------------ |
 | `name`             | Yes      | Display name (used in desktop entry)                   |
 | `repo`             | Yes      | GitHub repository URL                                  |
-| `binary`           | Yes      | Name of the executable in `/usr/local/bin`             |
+| `binary`           | Yes      | Name of the AppImage in `~/Applications`               |
 | `icon`             | Yes      | Path to icon file in this repo (e.g., `icons/app.svg`) |
 | `comment`          | No       | Tooltip description                                    |
 | `categories`       | No       | Semicolon-separated menu categories                    |
@@ -125,5 +132,7 @@ Want to add a new app? Open a PR that adds an entry to `apps.yaml` and the corre
 ## Notes
 
 - The script filters for `.AppImage` files and excludes filenames containing "arm" to target x86_64 systems.
-- `--help` and `--list` work without sudo.
-- All other operations require `sudo` because they write to `/usr/local/`.
+- AppImages are saved with the `.AppImage` extension.
+- **User-local (default)**: `~/Applications`, `~/.local/share/applications`, `~/.local/share/icons`
+- **System-wide (`--system`)**: `/opt/appimages`, `/usr/local/share/applications`, `/usr/local/share/icons`
+- Only `--update` and `--system` require sudo.
