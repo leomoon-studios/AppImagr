@@ -117,6 +117,15 @@
   startup_wm_class: lmms
   mime_type: audio/x-lmms-project;
 
+- name: LoslessCut
+  repo: https://github.com/mifi/lossless-cut
+  binary: losslesscut
+  icon: icons/losslesscut.svg
+  comment: Lossless Video Editor
+  categories: AudioVideo;Video;
+  startup_wm_class: losslesscut
+  mime_type:
+
 - name: MuseScore
   repo: https://github.com/musescore/MuseScore
   binary: musescore
@@ -197,6 +206,15 @@
   categories: AudioVideo;Video;
   startup_wm_class: Shotcut
   mime_type: application/vnd.mlt+xml;
+
+- name: SourceGit
+  repo: https://github.com/sourcegit-scm/sourcegit
+  binary: sourcegit
+  icon: icons/sourcegit.svg
+  comment: Git Client
+  categories: Development;Utility;
+  startup_wm_class: SourceGit
+  mime_type:
 
 - name: VSCodium
   repo: https://github.com/VSCodium/vscodium
