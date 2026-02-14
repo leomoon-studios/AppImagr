@@ -114,10 +114,10 @@
   icon: icons/lmms.svg
   comment: Linux MultiMedia Studio
   categories: AudioVideo;Audio;
-  startup_wm_class: lmms
+  startup_wm_class: LMMS
   mime_type: audio/x-lmms-project;
 
-- name: LoslessCut
+- name: LosslessCut
   repo: https://github.com/mifi/lossless-cut
   binary: losslesscut
   icon: icons/losslesscut.svg
