@@ -18,6 +18,15 @@
   startup_wm_class: Audacity
   mime_type: application/x-audacity-project;application/x-audacity-project+sqlite3;
 
+- name: CompressO
+  repo: https://github.com/codeforreal1/compressO
+  binary: compresso
+  icon: icons/compresso.svg
+  comment: Convert any video into a tiny size
+  categories: AudioVideo;Video;
+  startup_wm_class: compresso
+  mime_type:
+
 - name: Cura
   repo: https://github.com/Ultimaker/Cura
   binary: cura
