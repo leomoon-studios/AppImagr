@@ -21,7 +21,7 @@
 - name: CompressO
   repo: https://github.com/codeforreal1/compressO
   binary: compresso
-  icon: icons/compresso.svg
+  icon: icons/compresso.png
   comment: Convert any video into a tiny size
   categories: AudioVideo;Video;
   startup_wm_class: compresso
