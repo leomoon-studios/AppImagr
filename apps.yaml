@@ -162,7 +162,7 @@
   startup_wm_class: onlyoffice
   mime_type: application/vnd.oasis.opendocument.text;application/vnd.oasis.opendocument.spreadsheet;application/vnd.oasis.opendocument.presentation;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.openxmlformats-officedocument.presentationml.presentation;
 
-- name: Open Burning Suite
+- name: OpenBurningSuite
   repo: https://github.com/SvenGDK/OpenBurningSuite
   binary: openburningsuite
   icon: icons/openburningsuite.png
