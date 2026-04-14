@@ -154,11 +154,20 @@ show_help() {
 update_self() {
     echo "Updating appimagr..."
     local script_url="$GITHUB_RAW_URL/appimagr"
-    local tmp_file=$(mktemp)
-    
+    local script_path
+    script_path="$(realpath "$0")"
+    local tmp_file
+    tmp_file=$(mktemp)
+
     if curl -sfL -o "$tmp_file" "$script_url"; then
-        mv "$tmp_file" "$BIN_DIR/appimagr"
-        chmod 755 "$BIN_DIR/appimagr"
+        chmod 755 "$tmp_file"
+        if cp "$tmp_file" "$script_path" 2>/dev/null; then
+            rm -f "$tmp_file"
+        else
+            echo "Elevated privileges required to update $script_path"
+            sudo cp "$tmp_file" "$script_path" && sudo chmod 755 "$script_path"
+            rm -f "$tmp_file"
+        fi
         echo "appimagr updated successfully!"
     else
         rm -f "$tmp_file"
