@@ -216,6 +216,15 @@
   startup_wm_class: RustDesk
   mime_type:
 
+- name: Ryujinx
+  repo: https://git.ryujinx.app/projects/Ryubing
+  binary: ryujinx
+  icon: icons/ryujinx.svg
+  comment: Nintendo Switch Emulator
+  categories: Game;Emulator;
+  startup_wm_class: Ryujinx
+  mime_type:
+
 - name: Shotcut
   repo: https://github.com/mltframework/shotcut
   binary: shotcut

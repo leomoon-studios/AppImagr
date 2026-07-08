@@ -58,17 +58,24 @@ install_app() {
     echo "--------------------------------------------------"
     echo "Installing $app_name..."
 
-    # Extract Owner/Repo from URL
-    # Remove 'https://github.com/'
-    local repo_path="${repo_url#https://github.com/}"
-    local api_url="https://api.github.com/repos/${repo_path}/releases/latest"
+    # Build API URL based on host (GitHub vs Forgejo/Gitea)
+    local api_url
+    if [[ "$repo_url" == *"github.com"* ]]; then
+        local repo_path="${repo_url#https://github.com/}"
+        api_url="https://api.github.com/repos/${repo_path}/releases/latest"
+    else
+        local domain
+        domain=$(echo "$repo_url" | awk -F/ '{print $3}')
+        local repo_path="${repo_url#https://${domain}/}"
+        api_url="https://${domain}/api/v1/repos/${repo_path}/releases/latest"
+    fi
 
     echo "Fetching latest release info from $api_url..."
     
     # Get the download URL for the AppImage
     # We look for a file ending in .AppImage. 
     # We filter out ARM builds to ensure we get x86_64.
-    local download_url=$(curl -s "$api_url" | grep "browser_download_url" | grep -i ".AppImage\"" | grep -v -i "arm" | grep -v -i "arch" | head -n 1 | cut -d '"' -f 4)
+    local download_url=$(curl -s "$api_url" | tr ',' '\n' | sed -n 's/.*"browser_download_url": *"\([^"]*\.AppImage\)".*/\1/p' | grep -v -i "arm" | grep -v -i "arch" | head -n 1)
 
     if [ -z "$download_url" ]; then
         echo "Error: Could not find an AppImage download URL for $app_name"
