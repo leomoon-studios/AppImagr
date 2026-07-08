@@ -14,6 +14,7 @@ A simple Bash tool that acts as a package manager for GitHub-hosted AppImages. I
 - **Automated Downloads**: Fetches the latest AppImage releases from GitHub repositories.
 - **User-Local Installation**: Installs AppImages to `~/Applications` and creates `.desktop` files in `~/.local/share/applications`.
 - **System-Wide Installation**: Optional `--system` flag installs to `/opt/appimages` for all users (requires sudo).
+- **Custom Bin Directory**: Optional `--bin-dir` flag overrides the AppImage install directory independently of `--system`.
 - **Icon Support**: Automatically downloads and installs SVG/PNG icons to `~/.local/share/icons`.
 - **Architecture Filtering**: Automatically selects `x86_64` builds and filters out ARM versions.
 - **apt-like Interface**: Shows what will be installed and asks for confirmation.
@@ -58,6 +59,12 @@ appimagr --yes --all
 # Install system-wide to /opt/appimages (requires sudo)
 sudo appimagr --system pcsx2
 sudo appimagr -s --all
+
+# Install AppImage to a custom directory
+appimagr --bin-dir ~/bins pcsx2
+
+# System-wide icons/desktop entries, but custom AppImage directory
+sudo appimagr --system --bin-dir /opt/custom pcsx2
 
 # Update appimagr itself to the latest version (requires sudo)
 sudo appimagr --update
@@ -135,4 +142,4 @@ Want to add a new app? Open a PR that adds an entry to `apps.yaml` and the corre
 - AppImages are saved with the `.AppImage` extension.
 - **User-local (default)**: `~/Applications`, `~/.local/share/applications`, `~/.local/share/icons`
 - **System-wide (`--system`)**: `/opt/appimages`, `/usr/local/share/applications`, `/usr/local/share/icons`
-- Only `--update` and `--system` require sudo.
+- Only `--update` and `--system` require sudo. `--bin-dir` alone does not require sudo unless the target path requires elevated permissions.

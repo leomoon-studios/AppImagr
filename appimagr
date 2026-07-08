@@ -12,6 +12,9 @@ GITHUB_RAW_URL="https://raw.githubusercontent.com/$GITHUB_REPO/refs/heads/master
 # Installation mode (set by --system flag)
 SYSTEM_INSTALL=false
 
+# Custom bin directory (overrides default BIN_DIR when set)
+CUSTOM_BIN_DIR=""
+
 # Function to set directories based on installation mode
 set_directories() {
     if [ "$SYSTEM_INSTALL" = true ]; then
@@ -26,6 +29,11 @@ set_directories() {
         ICON_DIR_PNG="$HOME/.local/share/icons/hicolor/256x256/apps"
         DESKTOP_DIR="$HOME/.local/share/applications"
         ICON_CACHE_DIR="$HOME/.local/share/icons/hicolor"
+    fi
+
+    # Override BIN_DIR if --bin-dir was specified
+    if [ -n "$CUSTOM_BIN_DIR" ]; then
+        BIN_DIR="$CUSTOM_BIN_DIR"
     fi
 }
 
@@ -136,18 +144,21 @@ show_help() {
     echo "Options:"
     echo "  -a, --all      Download/update all applications"
     echo "  -y, --yes      Automatic yes to prompts (skip confirmation)"
-    echo "  -s, --system   Install system-wide to /opt/appimages (requires sudo)"
-    echo "  -l, --list     List supported applications"
-    echo "  -u, --update   Update appimagr itself to the latest version"
-    echo "  -h, --help     Show this help message"
+    echo "  -s, --system             Install system-wide to /opt/appimages (requires sudo)"
+    echo "      --bin-dir <path>     Override AppImage install directory"
+    echo "  -l, --list               List supported applications"
+    echo "  -u, --update             Update appimagr itself to the latest version"
+    echo "  -h, --help               Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 --all                   # Download/update all apps (user-local)"
-    echo "  $0 pcsx2                   # Download/update only PCSX2"
-    echo "  $0 cura pcsx2 imhex        # Download/update multiple apps"
-    echo "  $0 -y cura pcsx2           # Install without confirmation"
-    echo "  sudo $0 --system pcsx2     # Install system-wide to /opt/appimages"
-    echo "  sudo $0 --update           # Update appimagr to latest version"
+    echo "  $0 --all                            # Download/update all apps (user-local)"
+    echo "  $0 pcsx2                            # Download/update only PCSX2"
+    echo "  $0 cura pcsx2 imhex                 # Download/update multiple apps"
+    echo "  $0 -y cura pcsx2                    # Install without confirmation"
+    echo "  sudo $0 --system pcsx2              # Install system-wide to /opt/appimages"
+    echo "  $0 --bin-dir ~/bins pcsx2           # Install AppImage to custom directory"
+    echo "  sudo $0 --system --bin-dir /opt/custom pcsx2  # System icons, custom bin dir"
+    echo "  sudo $0 --update                    # Update appimagr to latest version"
 }
 
 # Function to update appimagr itself
@@ -241,6 +252,10 @@ while [[ $# -gt 0 ]]; do
             SYSTEM_INSTALL=true
             shift
             ;;
+        --bin-dir)
+            CUSTOM_BIN_DIR="$2"
+            shift 2
+            ;;
         *)
             TARGET_APPS+=("$1")
             shift
@@ -253,12 +268,13 @@ if [ "$SYSTEM_INSTALL" = true ]; then
     check_sudo
 fi
 
-# Warn if running as root without --system (would install to /root/Applications)
-if [ "$EUID" -eq 0 ] && [ "$SYSTEM_INSTALL" = false ]; then
+# Warn if running as root without --system or --bin-dir (would install to /root/Applications)
+if [ "$EUID" -eq 0 ] && [ "$SYSTEM_INSTALL" = false ] && [ -z "$CUSTOM_BIN_DIR" ]; then
     echo "Error: Running as root without --system would install to /root/Applications."
     echo "Either:"
     echo "  - Run without sudo for user-local install:    appimagr <app>"
     echo "  - Use --system for system-wide install:       sudo appimagr --system <app>"
+    echo "  - Use --bin-dir to specify a custom bin dir:  sudo appimagr --bin-dir /path <app>"
     exit 1
 fi
 
