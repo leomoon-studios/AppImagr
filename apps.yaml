@@ -90,6 +90,15 @@
   startup_wm_class: FreeCAD
   mime_type: model/stl;model/step+xml;application/vnd.freecad.document;
 
+- name: Heroic
+  repo: https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher
+  binary: heroic
+  icon: icons/heroic.svg
+  comment: Heroic Games Launcher
+  categories: Game;
+  startup_wm_class: Heroic
+  mime_type:
+
 - name: ImHex
   repo: https://github.com/WerWolv/ImHex
   binary: imhex
