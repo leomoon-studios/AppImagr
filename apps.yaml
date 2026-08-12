@@ -198,6 +198,15 @@
   startup_wm_class: PCSX2
   mime_type:
 
+- name: ProtonUp-Qt
+  repo: https://github.com/DavidoTek/ProtonUp-Qt
+  binary: protonup-qt
+  icon: icons/protonup-qt.png
+  comment: Manage Proton and Wine compatibility tools
+  categories: Game;Utility;
+  startup_wm_class: net.davidotek.pupgui2
+  mime_type:
+
 - name: RapidRAW
   repo: https://github.com/CyberTimon/RapidRAW
   binary: rapidraw
