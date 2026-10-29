@@ -180,6 +180,15 @@
   startup_wm_class: LMMS
   mime_type: audio/x-lmms-project;
 
+- name: MediaElch
+  repo: https://github.com/leomoon/MediaElch
+  binary: mediaelch
+  icon: icons/mediaelch.png
+  comment: Media library manager
+  categories: AudioVideo;Video;Utility;
+  startup_wm_class: MediaElch
+  mime_type:
+
 - name: LosslessCut
   repo: https://github.com/mifi/lossless-cut
   binary: losslesscut
