@@ -45,6 +45,15 @@
   startup_wm_class: Darktable
   mime_type: image/x-raw;image/jpeg;image/png;image/tiff;
 
+- name: DeckCraft
+  repo: https://github.com/storytold/deckcraft
+  binary: deckcraft
+  icon: icons/deckcraft.png
+  comment: Presentation and slide designer
+  categories: Office;Presentation;
+  startup_wm_class: ai.storyteller.deckcraft
+  mime_type: application/vnd.openxmlformats-officedocument.presentationml.presentation;
+
 - name: Duckstation
   repo: https://github.com/stenzek/duckstation
   binary: duckstation
@@ -62,6 +71,33 @@
   categories: Network;Utility;
   startup_wm_class: Electorrent
   mime_type: application/x-bittorrent;
+
+- name: EffectCraft
+  repo: https://github.com/storytold/effectcraft
+  binary: effectcraft
+  icon: icons/effectcraft.png
+  comment: Motion graphics and visual effects studio
+  categories: AudioVideo;Video;Graphics;
+  startup_wm_class: ai.storyteller.effectcraft
+  mime_type:
+
+- name: FigCraft
+  repo: https://github.com/storytold/figcraft
+  binary: figcraft
+  icon: icons/figcraft.png
+  comment: Interface design and prototyping tool
+  categories: Graphics;Development;
+  startup_wm_class: ai.storyteller.figcraft
+  mime_type:
+
+- name: FilmCraft
+  repo: https://github.com/storytold/filmcraft
+  binary: filmcraft
+  icon: icons/filmcraft.png
+  comment: Video editor, color and sound workstation
+  categories: AudioVideo;Video;
+  startup_wm_class: ai.storyteller.filmcraft
+  mime_type:
 
 - name: Flameshot
   repo: https://github.com/flameshot-org/flameshot
@@ -89,6 +125,15 @@
   categories: Graphics;3DGraphics;Engineering;
   startup_wm_class: FreeCAD
   mime_type: model/stl;model/step+xml;application/vnd.freecad.document;
+
+- name: GridCraft
+  repo: https://github.com/storytold/gridcraft
+  binary: gridcraft
+  icon: icons/gridcraft.png
+  comment: Spreadsheet application
+  categories: Office;Spreadsheet;
+  startup_wm_class: ai.storyteller.gridcraft
+  mime_type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;
 
 - name: Heroic
   repo: https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher
@@ -144,6 +189,15 @@
   startup_wm_class: losslesscut
   mime_type:
 
+- name: LightCraft
+  repo: https://github.com/storytold/lightcraft
+  binary: lightcraft
+  icon: icons/lightcraft.png
+  comment: Photo library and RAW developer
+  categories: Graphics;Photography;
+  startup_wm_class: ai.storyteller.lightcraft
+  mime_type: image/x-raw;image/jpeg;image/png;image/tiff;
+
 - name: MuseScore
   repo: https://github.com/musescore/MuseScore
   binary: musescore
@@ -197,6 +251,24 @@
   categories: Game;Emulator;
   startup_wm_class: PCSX2
   mime_type:
+
+- name: PdfCraft
+  repo: https://github.com/storytold/pdfcraft
+  binary: pdfcraft
+  icon: icons/pdfcraft.png
+  comment: PDF reader and editor
+  categories: Office;Viewer;
+  startup_wm_class: ai.storyteller.pdfcraft
+  mime_type: application/pdf;
+
+- name: PhotoCraft
+  repo: https://github.com/storytold/photocraft
+  binary: photocraft
+  icon: icons/photocraft.png
+  comment: Image editor
+  categories: Graphics;2DGraphics;Photography;
+  startup_wm_class: ai.storyteller.photocraft
+  mime_type: image/jpeg;image/png;image/tiff;image/vnd.adobe.photoshop;
 
 - name: ProtonUp-Qt
   repo: https://github.com/DavidoTek/ProtonUp-Qt
@@ -252,6 +324,24 @@
   startup_wm_class: Shotcut
   mime_type: application/vnd.mlt+xml;
 
+- name: SolidCraft
+  repo: https://github.com/tangency-labs/solidcraft
+  binary: solidcraft
+  icon: icons/solidcraft.png
+  comment: Parametric 3D CAD application
+  categories: Graphics;3DGraphics;Engineering;
+  startup_wm_class: io.tangencylabs.solidcraft
+  mime_type:
+
+- name: SoundCraft
+  repo: https://github.com/storytold/soundcraft
+  binary: soundcraft
+  icon: icons/soundcraft.png
+  comment: Digital audio workstation
+  categories: AudioVideo;Audio;
+  startup_wm_class: ai.storyteller.soundcraft
+  mime_type: audio/wav;audio/flac;audio/mpeg;audio/ogg;
+
 - name: SourceGit
   repo: https://github.com/sourcegit-scm/sourcegit
   binary: sourcegit
@@ -260,6 +350,24 @@
   categories: Development;Utility;
   startup_wm_class: SourceGit
   mime_type:
+
+- name: VectorCraft
+  repo: https://github.com/storytold/vectorcraft
+  binary: vectorcraft
+  icon: icons/vectorcraft.png
+  comment: Vector illustration application
+  categories: Graphics;2DGraphics;
+  startup_wm_class: ai.storyteller.vectorcraft
+  mime_type: image/svg+xml;
+
+- name: WordCraft
+  repo: https://github.com/storytold/wordcraft
+  binary: wordcraft
+  icon: icons/wordcraft.png
+  comment: Word processor and document designer
+  categories: Office;WordProcessor;
+  startup_wm_class: ai.storyteller.wordcraft
+  mime_type: application/vnd.openxmlformats-officedocument.wordprocessingml.document;
 
 - name: VSCodium
   repo: https://github.com/VSCodium/vscodium
