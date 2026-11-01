@@ -360,6 +360,15 @@
   startup_wm_class: SourceGit
   mime_type:
 
+- name: TextureCraft
+  repo: https://github.com/storytold/texturecraft
+  binary: texturecraft
+  icon: icons/texturecraft.png
+  comment: 3D texture painting application
+  categories: Graphics;3DGraphics;
+  startup_wm_class: ai.storyteller.texturecraft
+  mime_type:
+
 - name: VectorCraft
   repo: https://github.com/storytold/vectorcraft
   binary: vectorcraft
