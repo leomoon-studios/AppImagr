@@ -9,6 +9,15 @@
 #   startup_wm_class: WMClass (optional)
 #   mime_type: mime/type; (optional)
 
+- name: AniCraft
+  repo: https://github.com/storytold/anicraft
+  binary: anicraft
+  icon: icons/anicraft.png
+  comment: 2D animation editor
+  categories: Graphics;2DGraphics;
+  startup_wm_class: ai.storyteller.anicraft
+  mime_type:
+
 - name: Audacity
   repo: https://github.com/audacity/audacity
   binary: audacity
@@ -17,6 +26,15 @@
   categories: AudioVideo;Audio;
   startup_wm_class: Audacity
   mime_type: application/x-audacity-project;application/x-audacity-project+sqlite3;
+
+- name: BigText
+  repo: https://github.com/Erkinbek/bigtext
+  binary: bigtext
+  icon: icons/bigtext.png
+  comment: Text editor for large files
+  categories: Utility;TextEditor;
+  startup_wm_class: bigtext
+  mime_type:
 
 - name: CompressO
   repo: https://github.com/codeforreal1/compressO
