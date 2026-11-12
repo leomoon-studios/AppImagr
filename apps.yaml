@@ -12,7 +12,7 @@
 - name: AniCraft
   repo: https://github.com/storytold/anicraft
   binary: anicraft
-  icon: icons/anicraft.png
+  icon: icons/anicraft.svg
   comment: 2D animation editor
   categories: Graphics;2DGraphics;
   startup_wm_class: ai.storyteller.anicraft
@@ -66,7 +66,7 @@
 - name: DeckCraft
   repo: https://github.com/storytold/deckcraft
   binary: deckcraft
-  icon: icons/deckcraft.png
+  icon: icons/deckcraft.svg
   comment: Presentation and slide designer
   categories: Office;Presentation;
   startup_wm_class: ai.storyteller.deckcraft
@@ -93,7 +93,7 @@
 - name: EffectCraft
   repo: https://github.com/storytold/effectcraft
   binary: effectcraft
-  icon: icons/effectcraft.png
+  icon: icons/effectcraft.svg
   comment: Motion graphics and visual effects studio
   categories: AudioVideo;Video;Graphics;
   startup_wm_class: ai.storyteller.effectcraft
@@ -102,7 +102,7 @@
 - name: FigCraft
   repo: https://github.com/storytold/figcraft
   binary: figcraft
-  icon: icons/figcraft.png
+  icon: icons/figcraft.svg
   comment: Interface design and prototyping tool
   categories: Graphics;Development;
   startup_wm_class: ai.storyteller.figcraft
@@ -111,7 +111,7 @@
 - name: FilmCraft
   repo: https://github.com/storytold/filmcraft
   binary: filmcraft
-  icon: icons/filmcraft.png
+  icon: icons/filmcraft.svg
   comment: Video editor, color and sound workstation
   categories: AudioVideo;Video;
   startup_wm_class: ai.storyteller.filmcraft
@@ -147,7 +147,7 @@
 - name: GridCraft
   repo: https://github.com/storytold/gridcraft
   binary: gridcraft
-  icon: icons/gridcraft.png
+  icon: icons/gridcraft.svg
   comment: Spreadsheet application
   categories: Office;Spreadsheet;
   startup_wm_class: ai.storyteller.gridcraft
@@ -198,6 +198,24 @@
   startup_wm_class: LMMS
   mime_type: audio/x-lmms-project;
 
+- name: MailCraft
+  repo: https://github.com/UCS-Care-Group/mailcraft
+  binary: mailcraft
+  icon: icons/mailcraft.svg
+  comment: Mail, calendar and contacts client
+  categories: Office;Email;Calendar;ContactManagement;
+  startup_wm_class: io.github.billsecond.mailcraft
+  mime_type: message/rfc822;application/mbox;text/calendar;text/vcard;x-scheme-handler/mailto;
+
+- name: MaterialCraft
+  repo: https://github.com/storytold/materialcraft
+  binary: materialcraft
+  icon: icons/materialcraft.svg
+  comment: Node-based material designer
+  categories: Graphics;3DGraphics;
+  startup_wm_class: ai.storyteller.materialcraft
+  mime_type:
+
 - name: MediaElch
   repo: https://github.com/leomoon/MediaElch
   binary: mediaelch
@@ -219,7 +237,7 @@
 - name: LightCraft
   repo: https://github.com/storytold/lightcraft
   binary: lightcraft
-  icon: icons/lightcraft.png
+  icon: icons/lightcraft.svg
   comment: Photo library and RAW developer
   categories: Graphics;Photography;
   startup_wm_class: ai.storyteller.lightcraft
@@ -282,7 +300,7 @@
 - name: PdfCraft
   repo: https://github.com/storytold/pdfcraft
   binary: pdfcraft
-  icon: icons/pdfcraft.png
+  icon: icons/pdfcraft.svg
   comment: PDF reader and editor
   categories: Office;Viewer;
   startup_wm_class: ai.storyteller.pdfcraft
@@ -291,7 +309,7 @@
 - name: PhotoCraft
   repo: https://github.com/storytold/photocraft
   binary: photocraft
-  icon: icons/photocraft.png
+  icon: icons/photocraft.svg
   comment: Image editor
   categories: Graphics;2DGraphics;Photography;
   startup_wm_class: ai.storyteller.photocraft
@@ -354,7 +372,7 @@
 - name: SolidCraft
   repo: https://github.com/tangency-labs/solidcraft
   binary: solidcraft
-  icon: icons/solidcraft.png
+  icon: icons/solidcraft.svg
   comment: Parametric 3D CAD application
   categories: Graphics;3DGraphics;Engineering;
   startup_wm_class: io.tangencylabs.solidcraft
@@ -363,7 +381,7 @@
 - name: SoundCraft
   repo: https://github.com/storytold/soundcraft
   binary: soundcraft
-  icon: icons/soundcraft.png
+  icon: icons/soundcraft.svg
   comment: Digital audio workstation
   categories: AudioVideo;Audio;
   startup_wm_class: ai.storyteller.soundcraft
@@ -381,7 +399,7 @@
 - name: TextureCraft
   repo: https://github.com/storytold/texturecraft
   binary: texturecraft
-  icon: icons/texturecraft.png
+  icon: icons/texturecraft.svg
   comment: 3D texture painting application
   categories: Graphics;3DGraphics;
   startup_wm_class: ai.storyteller.texturecraft
@@ -390,7 +408,7 @@
 - name: VectorCraft
   repo: https://github.com/storytold/vectorcraft
   binary: vectorcraft
-  icon: icons/vectorcraft.png
+  icon: icons/vectorcraft.svg
   comment: Vector illustration application
   categories: Graphics;2DGraphics;
   startup_wm_class: ai.storyteller.vectorcraft
@@ -399,7 +417,7 @@
 - name: WordCraft
   repo: https://github.com/storytold/wordcraft
   binary: wordcraft
-  icon: icons/wordcraft.png
+  icon: icons/wordcraft.svg
   comment: Word processor and document designer
   categories: Office;WordProcessor;
   startup_wm_class: ai.storyteller.wordcraft
